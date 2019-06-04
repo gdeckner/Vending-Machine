@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Text.RegularExpressions;
 
 namespace Exercises
 {
@@ -6,7 +9,8 @@ namespace Exercises
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            
+            
         }
     }
 }
