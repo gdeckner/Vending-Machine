@@ -1,0 +1,57 @@
+ int wordCount = 0;
+            int sentenceCount = 0;
+            int index = 0;
+            string line;
+            string directory = @"C:\Users\georgd\georgdeckner-c-sharp-material\team5-c-sharp-week4-pair-exercises\17_FileIO_Reading_in\pair-exercise";
+            string file = @"alices_adventures_in_wonderland.txt";
+            string path1 = Path.Combine(directory, file);
+
+            using (StreamReader sr = new StreamReader(path1))
+            {
+                while (sr.ReadLine() != null)
+                {
+                    index = 0;
+                    line = sr.ReadLine();
+                    foreach (char x in line)
+                    {
+
+                        if (x.Equals('!') || x.Equals('?') || x.Equals('.'))
+                        {
+                            try
+                            {
+                                if (line[index + 1].Equals(' '))
+                                {
+                                    sentenceCount++;
+                                }
+                            }
+                            catch
+                            {
+
+                            }
+
+
+                        }
+                        index++;
+                    }
+                    index = 0;
+                    foreach (char x in line)
+                    {
+
+                        if (x.Equals(' '))
+                        {
+                            if (!line[index + 1].Equals(' '))
+                            {
+                                wordCount++;
+                            }
+                        }
+                        index++;
+                    }
+                    
+                    
+                }
+                Console.WriteLine(wordCount);
+                Console.WriteLine(sentenceCount);
+                Console.ReadLine();
+
+            }
+        }
