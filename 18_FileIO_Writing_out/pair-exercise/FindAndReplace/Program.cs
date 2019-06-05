@@ -6,7 +6,14 @@ namespace FindAndReplace
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            
+            CommandLineInterface cli = new CommandLineInterface();
+            
+
+            cli.Run();
+            
+
+            
         }
     }
 }
