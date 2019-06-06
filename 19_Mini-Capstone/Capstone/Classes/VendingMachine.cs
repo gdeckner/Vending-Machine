@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Text;
 
@@ -15,19 +16,19 @@ namespace Capstone.Classes
         public string DateTime { get; set; }
         public List<string[]> AuditData;
 
-        public double FeedMoney(string input)
+        public bool FeedMoney(string input)
         {
-            
+            bool valid = false;
             string[] feedAudit = new string[] { DateTime, "FEED MONEY", input, Balance.ToString() };
             AuditData.Add(feedAudit);
-            return Balance;
+            return valid;
         }
 
-        public string ReturnChange(double input)
+        public string ReturnChange()
         {
             string change = "";
             /* loop and create change */
-
+            //TORY
             string[] feedAudit = new string[] { DateTime, "FEED MONEY", Balance.ToString(), "0" };
             AuditData.Add(feedAudit);
             Balance = 0;
@@ -44,17 +45,23 @@ namespace Capstone.Classes
              *  balance -= price
              *  item quanity - 1
              *  return true */
-
+             //GEORG
             string[] feedAudit = new string[] { DateTime, nameAndSlot, oldBalance, Balance.ToString()};
             AuditData.Add(feedAudit);
 
             return CanPurchase;
-
-
         }
 
-        public string[] AddItems(string line)
+
+
+        public string[] generateInfo(string filePath)
         {
+            string line;
+            using (StreamReader sr = new StreamReader(filePath))
+            {
+                line = sr.ReadToEnd();
+            }
+
             string[] item = line.Split('|');
             int index = items.Count;
 
@@ -68,21 +75,17 @@ namespace Capstone.Classes
 
         public string Display()
         {
-            string displayLine = "";
+            string displaystring;
+            //GEORG
 
-            foreach (VendingMachineItem item in items)
-            {
-               
-                displayLine += $"item[0] item[1] item[2] item[3]" + "\n";
-                
-            }
-
-            return displayLine;
-
+            return displayString;
         }
 
-
-
+        public void PrintAudit()
+        {
+            //TORY
+        }
+       
 
     }
 }
