@@ -8,7 +8,7 @@ namespace Capstone.Classes
     public class VendingMachine
     {
         private List<VendingMachineItem> items = new List<VendingMachineItem>();
-        private string filePath = @"C:\Users\georgd\georgdeckner-c-sharp-material\team5-c-sharp-week4-pair-exercises\19_Mini-Capstone\etc\vendingmachine.csv";
+        private string filePath = @"C:\VendingMachine";
         public double Balance { get; set; }
         public bool CanPurchase = false;
         public string CurrentDateTime { get; set; }
@@ -105,8 +105,18 @@ namespace Capstone.Classes
 
         public string Display()
         {
-            string displayString = " k";
-            //GEORG
+            string displayString = "";
+           foreach(VendingMachineItem x in items)
+            {
+                if(x.Quantity == 0)
+                {
+                    displayString = String.Format("{0,-20} {1,-10} {2,-10} {3,-10}", x.Slot,x.Name,x.Price,"Sold Out!");
+                }
+                else
+                {
+                    displayString = String.Format("{0,-20} {1,-10} {2,-10} {3,-10}", x.Slot, x.Name, x.Price,x.Quantity);
+                }
+            }
 
             return displayString;
         }
