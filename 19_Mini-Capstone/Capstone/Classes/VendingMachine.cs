@@ -23,12 +23,17 @@ namespace Capstone.Classes
 
         public bool FeedMoney(string input)
         {
+            int feedInput = Convert.ToInt32(input);
             CurrentDateTime = DateTime.Now.ToString("MM/dd/yyyy hh:mm tt");
             bool valid = false;
-            Balance += Convert.ToDouble(input);
-
-            string[] feedAudit = new string[] { CurrentDateTime, "FEED MONEY", input, Balance.ToString() };
-            AuditData.Add(feedAudit);
+            if(feedInput == 1 || feedInput == 2 || feedInput == 5 || feedInput == 10)
+            {
+                valid = true;
+                Balance += Convert.ToDouble(input);
+                string[] feedAudit = new string[] { CurrentDateTime, "FEED MONEY", input, Balance.ToString() };
+                AuditData.Add(feedAudit);
+            }
+           
             return valid;
         }
 
