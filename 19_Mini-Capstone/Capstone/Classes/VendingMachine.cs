@@ -13,29 +13,32 @@ namespace Capstone.Classes
 
         public double Balance { get; set; }
         public bool CanPurchase = false;
-        public string DateTime { get; set; }
+        public string CurrentDateTime { get; set; }
         public List<string[]> AuditData;
 
         public bool FeedMoney(string input)
         {
+            CurrentDateTime = DateTime.Now.ToString("MM/dd/yyyy hh:mm tt");
             bool valid = false;
-            string[] feedAudit = new string[] { DateTime, "FEED MONEY", input, Balance.ToString() };
+            string[] feedAudit = new string[] { CurrentDateTime, "FEED MONEY", input, Balance.ToString() };
             AuditData.Add(feedAudit);
             return valid;
         }
 
         public string ReturnChange()
         {
+            CurrentDateTime = DateTime.Now.ToString("MM/dd/yyyy hh:mm tt");
             string change = "";
             /* loop and create change */
             //TORY
-            string[] feedAudit = new string[] { DateTime, "FEED MONEY", Balance.ToString(), "0" };
+            string[] feedAudit = new string[] { CurrentDateTime, "FEED MONEY", Balance.ToString(), "0" };
             AuditData.Add(feedAudit);
             Balance = 0;
             return change;
         }
         public bool Purchase(string input)
         {
+            CurrentDateTime = DateTime.Now.ToString("MM/dd/yyyy hh:mm tt");
             string oldBalance = Balance.ToString();
             string nameAndSlot = "";
             /* if item exists canPurchase = true
@@ -46,7 +49,7 @@ namespace Capstone.Classes
              *  item quanity - 1
              *  return true */
              //GEORG
-            string[] feedAudit = new string[] { DateTime, nameAndSlot, oldBalance, Balance.ToString()};
+            string[] feedAudit = new string[] { CurrentDateTime, nameAndSlot, oldBalance, Balance.ToString()};
             AuditData.Add(feedAudit);
 
             return CanPurchase;
