@@ -8,10 +8,7 @@ namespace Capstone.Classes
     public class VendingMachine
     {
         private List<VendingMachineItem> items = new List<VendingMachineItem>();
-
-        //private string filePath = @"C:\VendingMachine";
         private string filePath = @"C:\Users\georgd\georgdeckner-c-sharp-material\team5-c-sharp-week4-pair-exercises\19_Mini-Capstone\etc\vendingmachine.csv";
-
         public double Balance { get; set; }
         public bool CanPurchase = false;
         public string CurrentDateTime { get; set; }
@@ -28,6 +25,8 @@ namespace Capstone.Classes
         {
             CurrentDateTime = DateTime.Now.ToString("MM/dd/yyyy hh:mm tt");
             bool valid = false;
+            Balance += Convert.ToDouble(input);
+
             string[] feedAudit = new string[] { CurrentDateTime, "FEED MONEY", input, Balance.ToString() };
             AuditData.Add(feedAudit);
             return valid;
@@ -45,32 +44,50 @@ namespace Capstone.Classes
             return change;
         }
         public bool Purchase(string input)
-        {
+        { //Need to give specific error message based on why it was unable to purchase, 
+          // either via setting string property or something else
             CurrentDateTime = DateTime.Now.ToString("MM/dd/yyyy hh:mm tt");
             string oldBalance = Balance.ToString();
             string nameAndSlot = "";
-            /* if item exists canPurchase = true
-             *  else returns false
-             *  
-             * if true
-             *  balance -= price
-             *  item quanity - 1
-             *  return true */
-            //GEORG
+            double getPrice = 0;
+         foreach (VendingMachineItem x in items)
+            {
+                if (x.Slot.ToLower().Equals(input))
+                {
+
+                    getPrice = Convert.ToDouble(x.Slot);
+                    if (Balance > getPrice && x.Quantity > 0)
+                    {
+                        CanPurchase = true;
+                    }
+                    else
+                    {
+                        CanPurchase = false;
+                        return false;
+                        
+                    }
+                }
+                if (CanPurchase)
+                {
+                    Balance -= getPrice;
+                    x.Quantity -= 1;
+                    return true;
+                }
+            }
+
+
             string[] feedAudit = new string[] { CurrentDateTime, nameAndSlot, oldBalance, Balance.ToString() };
             AuditData.Add(feedAudit);
 
             return CanPurchase;
         }
 
-
-
         public void generateInfo(string filePath)
         {
             string line;
             using (StreamReader sr = new StreamReader(filePath))
             {
-                while(!sr.EndOfStream)
+                while (!sr.EndOfStream)
                 {
                     line = sr.ReadLine();
                     string[] item = line.Split('|');
@@ -81,12 +98,7 @@ namespace Capstone.Classes
                     items[index].Name = item[1];
                     items[index].Price = item[2];
                     items[index].Quantity = 5;
-                } 
-
-
-
-
-
+                }
             }
 
         }
@@ -103,7 +115,16 @@ namespace Capstone.Classes
         {
             //TORY
         }
-
-
     }
 }
+
+
+
+
+
+
+
+
+
+
+
