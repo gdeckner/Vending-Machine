@@ -8,13 +8,21 @@ namespace Capstone.Classes
     public class VendingMachine
     {
         private List<VendingMachineItem> items = new List<VendingMachineItem>();
-        
-        private string filePath = @"C:\VendingMachine";
+
+        //private string filePath = @"C:\VendingMachine";
+        private string filePath = @"C:\Users\georgd\georgdeckner-c-sharp-material\team5-c-sharp-week4-pair-exercises\19_Mini-Capstone\etc\vendingmachine.csv";
 
         public double Balance { get; set; }
         public bool CanPurchase = false;
         public string CurrentDateTime { get; set; }
         public List<string[]> AuditData;
+
+        public VendingMachine()
+        {
+            generateInfo(filePath);
+        }
+
+
 
         public bool FeedMoney(string input)
         {
@@ -48,8 +56,8 @@ namespace Capstone.Classes
              *  balance -= price
              *  item quanity - 1
              *  return true */
-             //GEORG
-            string[] feedAudit = new string[] { CurrentDateTime, nameAndSlot, oldBalance, Balance.ToString()};
+            //GEORG
+            string[] feedAudit = new string[] { CurrentDateTime, nameAndSlot, oldBalance, Balance.ToString() };
             AuditData.Add(feedAudit);
 
             return CanPurchase;
@@ -57,28 +65,35 @@ namespace Capstone.Classes
 
 
 
-        public string[] generateInfo(string filePath)
+        public void generateInfo(string filePath)
         {
             string line;
             using (StreamReader sr = new StreamReader(filePath))
             {
-                line = sr.ReadToEnd();
+                while(!sr.EndOfStream)
+                {
+                    line = sr.ReadLine();
+                    string[] item = line.Split('|');
+                    int index = items.Count;
+
+                    items.Add(new VendingMachineItem());
+                    items[index].Slot = item[0];
+                    items[index].Name = item[1];
+                    items[index].Price = item[2];
+                    items[index].Quantity = 5;
+                } 
+
+
+
+
+
             }
 
-            string[] item = line.Split('|');
-            int index = items.Count;
-
-            items[index].Slot = item[0];
-            items[index].Name = item[1];
-            items[index].Price = item[2];
-            items[index].Quantity = 5;
-
-            return item;
         }
 
         public string Display()
         {
-            string displaystring;
+            string displayString = " k";
             //GEORG
 
             return displayString;
@@ -88,7 +103,7 @@ namespace Capstone.Classes
         {
             //TORY
         }
-       
+
 
     }
 }

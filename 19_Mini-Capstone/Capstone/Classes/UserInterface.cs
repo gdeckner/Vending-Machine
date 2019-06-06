@@ -14,7 +14,7 @@ namespace Capstone.Classes
 
         public void RunInterface()
         {
-
+            
 
             while (!Done)
             {
