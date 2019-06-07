@@ -136,13 +136,28 @@ namespace Capstone.Classes
                     displayString += "\n";
                 }
             }
-            ]
+            
             return displayString;
         }
 
         public void PrintAudit()
         {
             //TORY
+        }
+        public void PrintReport()
+        {
+            double totalSales = 0;
+            string saleReportName = CurrentDateTime + "SalesReport.txt";
+            using (StreamWriter sw = new StreamWriter(saleReportName))
+            {
+                for(int i = 0;i < items.Count;i++)
+                {
+                    sw.WriteLine(items[i].Name + "|" + Math.Abs(items[i].Quantity-5) + "\n") ;
+                    totalSales += (Convert.ToDouble(items[i].Price) * (Math.Abs(items[i].Quantity - 5)));
+                    totalSales = Math.Round(totalSales, 2);
+                }
+                sw.WriteLine("** TOTAL SALES **  " + totalSales);
+            }
         }
     }
 }
