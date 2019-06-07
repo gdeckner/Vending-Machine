@@ -8,11 +8,11 @@ namespace Capstone.Classes
     public class VendingMachine
     {
         private List<VendingMachineItem> items = new List<VendingMachineItem>();
-        private string filePath = @"C:\VendingMachine";
+        protected string filePath = @"C:\Users\georgd\georgdeckner-c-sharp-material\team5-c-sharp-week4-pair-exercises\19_Mini-Capstone\etc\vendingmachine.csv";
         public double Balance { get; set; }
         public bool CanPurchase = false;
         public string CurrentDateTime { get; set; }
-        public List<string[]> AuditData;
+        public List<string[]> AuditData = new List<string[]>();
 
         public VendingMachine()
         {
@@ -23,14 +23,25 @@ namespace Capstone.Classes
 
         public bool FeedMoney(string input)
         {
-            int feedInput = Convert.ToInt32(input);
+            double feedInput = 0;
+
+            try
+            {
+                feedInput = Convert.ToDouble(input);
+            }
+            catch
+            {
+                
+                return false;
+            }
+            
             CurrentDateTime = DateTime.Now.ToString("MM/dd/yyyy hh:mm tt");
             bool valid = false;
             if(feedInput == 1 || feedInput == 2 || feedInput == 5 || feedInput == 10)
             {
                 valid = true;
                 Balance += Convert.ToDouble(input);
-                string[] feedAudit = new string[] { CurrentDateTime, "FEED MONEY", input, Balance.ToString() };
+                string[] feedAudit = new string[] { CurrentDateTime, "FEED MONEY", feedInput.ToString(), Balance.ToString() };
                 AuditData.Add(feedAudit);
             }
            
