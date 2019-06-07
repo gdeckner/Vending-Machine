@@ -9,7 +9,19 @@ namespace Capstone.Classes
     {
         private List<VendingMachineItem> items = new List<VendingMachineItem>();
         private string FilePath = @"C:\VendingMachine";
-        public double Balance { get; set; }
+        public decimal Balance { get; set; }
+        public List<VendingMachineItem> clone // for testing only
+        {
+            get
+            {
+                return items;
+            }
+            set
+            {
+
+            }
+        }
+           
         public string CurrentDateTime
         {
             get
@@ -19,37 +31,37 @@ namespace Capstone.Classes
         }
         private List<string[]> AuditData = new List<string[]>();
 
-
         public VendingMachine()
         {
-            generateInfo(FilePath);
+            GenerateInfo(FilePath);
         }
-        public VendingMachine(string filePath)
+
+        public VendingMachine(string filePath)//created for testing with own filePath
         {
             FilePath = filePath;
-            generateInfo(FilePath);
+            GenerateInfo(FilePath);
         }
-
-
 
         public bool FeedMoney(string input)
         {
-            double feedInput = 0;
+            decimal feedInput = 0;
 
             try
             {
-                feedInput = Convert.ToDouble(input);
+                feedInput = Convert.ToDecimal(input);
+                feedInput = Decimal.Parse(feedInput.ToString("0.00"));
             }
             catch
             {
-
                 return false;
             }
+
             bool valid = false;
+
             if (feedInput == 1 || feedInput == 2 || feedInput == 5 || feedInput == 10)
             {
                 valid = true;
-                Balance += Convert.ToDouble(input);
+                Balance += feedInput;
                 string[] feedAudit = new string[] { CurrentDateTime, "FEED MONEY", feedInput.ToString(), Balance.ToString() };
                 AuditData.Add(feedAudit);
             }
@@ -57,9 +69,8 @@ namespace Capstone.Classes
             return valid;
         }
 
-        public string ReturnChange(double balance)
+        public string ReturnChange(decimal balance)
         {
-           
             string change = "";
 
             int returnAmount = (int)(balance * 100);
@@ -75,10 +86,11 @@ namespace Capstone.Classes
 
             int pennies = returnAmount / 1;
 
-            change = $"Your change is {quarters} quarters, {dimes} dimes, {nickels} nickels, and {pennies} pennies, and total of {balance}";
-
-            string[] feedAudit = new string[] { CurrentDateTime, "GIVE CHANGE", Balance.ToString(), "0" };
+            change = $"Your change is {quarters} quarters, {dimes} dimes, {nickels} nickels, and {pennies} pennies, for a total of ${balance}";
+           
+            string[] feedAudit = new string[] { CurrentDateTime, "GIVE CHANGE", Balance.ToString(), "0.00" };
             AuditData.Add(feedAudit);
+
             Balance = 0;
 
             return change;
@@ -88,14 +100,15 @@ namespace Capstone.Classes
         { 
             string oldBalance = Balance.ToString();
             string nameAndSlot = "";
-            double getPrice = 0;
+            decimal getPrice = 0;
             bool canPurchase = false;
+
             foreach (VendingMachineItem x in items)
             {
                 if (x.Slot.ToLower().Equals(input))
                 {
+                    getPrice = Convert.ToDecimal(x.Price);
 
-                    getPrice = Convert.ToDouble(x.Price);
                     if (Balance > getPrice && x.Quantity > 0)
                     {
                         canPurchase = true;
@@ -111,6 +124,7 @@ namespace Capstone.Classes
                         canPurchase = false;
                         return "Item is sold out!";
                     }
+
                     if (canPurchase)
                     {
                         Balance -= getPrice;
@@ -118,11 +132,9 @@ namespace Capstone.Classes
                         string[] feedAudit = new string[] { CurrentDateTime, nameAndSlot, oldBalance, Balance.ToString() };
                         AuditData.Add(feedAudit);
 
-                        return "You have succesfully purchased " + nameAndSlot;
+                        return "You have successfully purchased " + x.Name;
                     }
-
                 }
-
             }
 
             return "Item not found!";  
@@ -155,9 +167,10 @@ namespace Capstone.Classes
             return message;
         }
 
-        public void generateInfo(string filePath)
+        public void GenerateInfo(string filePath)
         {
             string line;
+
             using (StreamReader sr = new StreamReader(filePath))
             {
                 while (!sr.EndOfStream)
@@ -173,23 +186,25 @@ namespace Capstone.Classes
                     items[index].Quantity = 5;
                 }
             }
-
         }
 
         public string Display()
         {
             string displayString = String.Format("   {0,-5}  {1,-20} {2,-10} {3,-10}", "Slot", "Item Name", "Price", "Amount");
             displayString += "\n";
+
             for (int i = 0; i < 45; i++)
             {
                 displayString += "=";
             }
+
             displayString += "\n";
+
             for (int i = 0; i < items.Count; i++)
             {
                 if (items[i].Quantity == 0)
                 {
-                    displayString += String.Format("    {0,-5} {1,-20} {2,-10}    {3,-10}", items[i].Slot, items[i].Name, items[i].Price, "Sold Out!");
+                    displayString += String.Format("    {0,-5} {1,-20} {2,-7}{3,-10}", items[i].Slot, items[i].Name, items[i].Price, "Sold Out!");
                     displayString += "\n";
                 }
                 else
@@ -198,6 +213,7 @@ namespace Capstone.Classes
                     displayString += "\n";
                 }
             }
+
             return displayString;
         }
 
@@ -215,20 +231,23 @@ namespace Capstone.Classes
 
         public void PrintSalesReport()
         {
-            double totalSales = 0;
+            decimal totalSales = 0;
             string salesDateTime = DateTime.Now.ToString("MM/dd/yyyy HH:mm tt");
             salesDateTime = salesDateTime.Replace('/', '_').Replace(':', '-').Replace(' ', '_');
             
             string saleReportName = @"C:\VendingMachine\" + salesDateTime+ "_SalesReport.txt";
+
             using (StreamWriter sw = new StreamWriter(saleReportName))
             {
                 for (int i = 0; i < items.Count; i++)
                 {
-                    sw.WriteLine(items[i].Name + "|" + Math.Abs(items[i].Quantity - 5) + "\n");
-                    totalSales += (Convert.ToDouble(items[i].Price) * (Math.Abs(items[i].Quantity - 5)));
+                    sw.WriteLine(String.Format("    {0,-20} {1,-5}", items[i].Name, "| " + Math.Abs(items[i].Quantity - 5)));
+                    totalSales += (Convert.ToDecimal(items[i].Price) * (Math.Abs(items[i].Quantity - 5)));
                     totalSales = Math.Round(totalSales, 2);
                 }
-                sw.WriteLine("** TOTAL SALES **  " + totalSales);
+
+                sw.WriteLine();
+                sw.WriteLine(String.Format("    {0,-20} {1,-5}", "** TOTAL SALES **",totalSales.ToString("0.00")));
             }
         }
     }

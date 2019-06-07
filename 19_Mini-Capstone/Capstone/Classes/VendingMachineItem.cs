@@ -10,8 +10,6 @@ namespace Capstone.Classes
         public string Name { get; set; }
         public string Price { get; set; }
         public int Quantity = 5;
-        
-       
     }
         
         
