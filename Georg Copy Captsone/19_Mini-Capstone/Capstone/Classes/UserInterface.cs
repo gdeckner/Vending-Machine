@@ -7,7 +7,7 @@ namespace Capstone.Classes
 {
     public class UserInterface
     {
-        private VendingMachine vendingMachine = new VendingMachine();
+        private VendingMachine vendingMachine = new VendingMachine(@"C:\Users\georgd\georgdeckner-c-sharp-material\team5-c-sharp-week4-pair-exercises\19_Mini-Capstone\etc\vendingmachine.csv");
         private bool SelectedMenuTwo = false;
         private bool Done = false;
 
@@ -35,9 +35,10 @@ namespace Capstone.Classes
             Console.WriteLine("(1) Display Vending Machine Items");
             Console.WriteLine("(2) Purchase");
             Console.WriteLine("(3) End");
-
+            Console.WriteLine();
 
             string answer = Console.ReadLine();
+            Console.WriteLine();
 
             switch (answer)
             {
@@ -51,13 +52,13 @@ namespace Capstone.Classes
                 case "3":
                     Done = true;
                     break;
+                case "9":
+                    vendingMachine.PrintSalesReport();
+                    break;
                 default:
                     Console.WriteLine("Invalid input, please try again.");
                     break;
             }
-
-
-
         }
 
         public void MenuTwo()
@@ -70,9 +71,10 @@ namespace Capstone.Classes
                 Console.WriteLine("(2) Select Product");
                 Console.WriteLine("(3) Finish Transaction");
                 Console.WriteLine($"Current Money Provided: $ {vendingMachine.Balance}");
-
                 Console.WriteLine();
+
                 string answer = Console.ReadLine();
+                Console.WriteLine();
 
                 switch (answer)
                 {
@@ -80,38 +82,66 @@ namespace Capstone.Classes
                         bool donePaying = false;
                         bool isValid = false;
 
-                        Console.WriteLine("INSERT BILLS NOW ($1, $2, $5, $10, etc.");
-                        answer = Console.ReadLine();
-
                         while (!donePaying)
                         {
+
+                            Console.WriteLine("INSERT BILLS NOW ($1, $2, $5, $10, etc.)");
+                            Console.WriteLine();
+
+                            answer = Console.ReadLine();
+                            Console.WriteLine();
+
                             isValid = vendingMachine.FeedMoney(answer);
                             if (isValid)
                             {
-                                Console.WriteLine("Are you done? Press (Y) to continue, (N) to exit");
+                                Console.Write("Would you like to add more funds? (Y/N) ");
+                                Console.WriteLine();
+
+                                answer = Console.ReadLine().ToLower();
 
                                 if (answer == "y")
                                 {
-                                    donePaying = true;
+                                    donePaying = false;
                                 }
                                 else if (answer == "n")
                                 {
-                                    donePaying = false;
+                                    donePaying = true;
                                 }
                                 else
                                 {
-                                    donePaying = false;
+                                    donePaying = true;
                                 }
+                            }
+                            else
+                            {
+                                Console.WriteLine("Invalid entry, please try again.");
+                                Console.WriteLine();
                             }
 
                         }
                         break;
                     case "2":
-                        //GEORG
+                        Console.WriteLine(vendingMachine.Display());
+
+                        Console.WriteLine("Please enter the slot identifier: ");
+                        answer = Console.ReadLine();
+                        Console.WriteLine();
+
+                        Console.WriteLine(vendingMachine.Purchase(answer));
+
+                        if(!vendingMachine.Purchase(answer).Contains('!'))
+                        {
+                            Console.WriteLine(vendingMachine.ConsumptionMessage(answer));
+                        }
+                        
+                        Console.WriteLine();
                         break;
+
                     case "3":
                         menuTwoDone = true;
-                        Console.WriteLine(vendingMachine.ReturnChange());
+                        Console.WriteLine(vendingMachine.ReturnChange(vendingMachine.Balance));
+                        vendingMachine.PrintAudit();
+                        SelectedMenuTwo = false;
                         break;
                     default:
                         Console.WriteLine("Invalid input, please try again.");
