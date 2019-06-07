@@ -27,10 +27,11 @@ namespace CapstoneTests
             Assert.AreEqual(true, newObject.FeedMoney("1"), "Expected true, returned false");
             Assert.AreEqual(true, newObject.FeedMoney("2.00"), "Expected true, returned false");
             Assert.AreEqual(true, newObject.FeedMoney("2"), "Expected true, returned false");
+            newObject.Balance = 0;
             newObject.FeedMoney("5");
             Assert.AreEqual(5, newObject.Balance, "Expected 5 but returned " + newObject.Balance);
             newObject.FeedMoney("10");
-            Assert.AreEqual(10, newObject.Balance, "Expected 10 but returned " + newObject.Balance);
+            Assert.AreEqual(15, newObject.Balance, "Expected 15 but returned " + newObject.Balance);
             
         }
 

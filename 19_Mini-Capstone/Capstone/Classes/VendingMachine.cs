@@ -121,19 +121,22 @@ namespace Capstone.Classes
 
         public string Display()
         {
-            string displayString = "";
-           foreach(VendingMachineItem x in items)
+            string displayString = String.Format("   {0,-5}  {1,-20} {2,-10} {3,-10}", "Slot","Item Name","Price","Amount");
+            displayString += "\n" + "\n";
+           for(int i = 0; i < items.Count;i++)
             {
-                if(x.Quantity == 0)
+                if(items[i].Quantity == 0)
                 {
-                    displayString = String.Format("{0,-20} {1,-10} {2,-10} {3,-10}", x.Slot,x.Name,x.Price,"Sold Out!");
+                    displayString += String.Format("    {0,-5} {1,-20} {2,-10} {3,-10}", items[i].Slot, items[i].Name, items[i].Price,"Sold Out!");
+                    displayString += "\n";
                 }
                 else
                 {
-                    displayString = String.Format("{0,-20} {1,-10} {2,-10} {3,-10}", x.Slot, x.Name, x.Price,x.Quantity);
+                    displayString += String.Format("    {0,-5} {1,-20} {2,-10} {3,-10}", items[i].Slot, items[i].Name, items[i].Price, items[i].Quantity);
+                    displayString += "\n";
                 }
             }
-
+            Console.WriteLine(displayString);
             return displayString;
         }
 
