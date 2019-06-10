@@ -45,7 +45,7 @@ namespace Capstone.Classes
         public bool FeedMoney(string input)
         {
             decimal feedInput = 0;
-
+            bool valid = false;
             try
             {
                 feedInput = Convert.ToDecimal(input);
@@ -53,10 +53,10 @@ namespace Capstone.Classes
             }
             catch
             {
-                return false;
+                valid = false;
             }
 
-            bool valid = false;
+          
 
             if (feedInput == 1 || feedInput == 2 || feedInput == 5 || feedInput == 10)
             {
@@ -100,6 +100,7 @@ namespace Capstone.Classes
         { 
             string oldBalance = Balance.ToString();
             string nameAndSlot = "";
+            string output = "Item not found!";
             decimal getPrice = 0;
             bool canPurchase = false;
 
@@ -117,12 +118,12 @@ namespace Capstone.Classes
                     else if(getPrice > Balance)
                     {
                         canPurchase = false;
-                        return "Not enough funds!";
+                        output = "Not enough funds!";
                     }
                     else if(x.Quantity == 0)
                     {
                         canPurchase = false;
-                        return "Item is sold out!";
+                        output = "Item is sold out!";
                     }
 
                     if (canPurchase)
@@ -132,12 +133,12 @@ namespace Capstone.Classes
                         string[] feedAudit = new string[] { CurrentDateTime, nameAndSlot, oldBalance, Balance.ToString() };
                         AuditData.Add(feedAudit);
 
-                        return "You have successfully purchased " + x.Name;
+                        output = "You have successfully purchased " + x.Name;
                     }
                 }
             }
 
-            return "Item not found!";  
+            return output;  
         }
 
         public string ConsumptionMessage(string input)
